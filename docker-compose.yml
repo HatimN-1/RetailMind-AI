@@ -37,19 +37,35 @@ services:
       - qdrant_data:/qdrant/storage
     ports:
       - "127.0.0.1:6333:6333"
+  airflow-data-init:
+    image: busybox:1.36
+    profiles: ["airflow"]
+    user: "0:0"
+    volumes:
+      - retailmind_airflow_data:/data
+    command: ["sh", "-c", "chown -R 50000:0 /data && chmod -R ug+rwX /data"]
+    restart: "no"
   airflow:
     build:
       context: .
       dockerfile: docker/Dockerfile.airflow
     profiles: ["airflow"]
+    depends_on:
+      airflow-data-init:
+        condition: service_completed_successfully
     environment:
       AIRFLOW__CORE__EXECUTOR: SequentialExecutor
       AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
       PYTHONPATH: /opt/airflow/project/src
-      RETAILMIND_HOME: /opt/airflow
+      # Data and marts go to an isolated named volume, not V3's host data/.
+      RETAILMIND_HOME: /opt/airflow/project
+      PYSPARK_PYTHON: /opt/retailmind-venv/bin/python
+      SPARK_LOCAL_IP: '127.0.0.1'
+      AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: 'true'
       AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: sqlite:////opt/airflow/airflow.db
     volumes:
       - ./:/opt/airflow/project
+      - retailmind_airflow_data:/opt/airflow/project/data
       - ./airflow/dags:/opt/airflow/dags
       - airflow_state:/opt/airflow
     command: ["bash", "-c", "airflow db migrate && airflow users create --username admin --firstname Retail --lastname Analyst --role Admin --email admin@localhost --password change-me-local || true; airflow webserver --port 8080 & airflow scheduler"]
@@ -59,3 +75,4 @@ volumes:
   retailmind_data:
   qdrant_data:
   airflow_state:
+  retailmind_airflow_data:
