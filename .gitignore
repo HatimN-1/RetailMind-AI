@@ -1,0 +1,46 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+
+# React
+frontend/node_modules/
+frontend/dist/
+
+# Secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Données et modèles générés
+data/raw/
+data/curated/
+data/marts/
+*.sqlite
+*.db
+*.joblib
+*.pkl
+*.pt
+*.pth
+
+# Index vectoriels et temporaires
+qdrant_storage/
+.test-temp/
+*.log
+# Additional local artifacts
+*.sqlite3
+data/qdrant/
+data/vector_store/
+
+# Hugging Face / SentenceTransformers cache
+data/embedding_cache/
+
+# Local Qdrant database
+data/qdrant_local/
+
+# Python packaging artifacts
+*.egg-info/

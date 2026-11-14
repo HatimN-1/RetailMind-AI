@@ -1,0 +1,470 @@
+{
+  "protocol": "18 labelled queries + 1 out-of-scope control; document recall on top-k chunks",
+  "backend": "tfidf",
+  "embedding_config": null,
+  "corpus_fingerprint": "b5f39abab53683a9ac7cb4e63c649b51ea6096c4a5149e3f934add94fbeb3588",
+  "questions_sha256": "9867828762e8d0cd9c8f0d2811940be59c851e11e11f28a03ff8bc3327dc69e6",
+  "seed": 42,
+  "versions": {
+    "qdrant-client": "1.20.0",
+    "sentence-transformers": "5.7.0",
+    "langgraph": "1.2.22",
+    "numpy": "2.4.6",
+    "scikit-learn": "1.9.1"
+  },
+  "queries": 19,
+  "successful_queries": 19,
+  "queries_with_matches": 15,
+  "queries_without_matches": 4,
+  "retrieval_errors": 0,
+  "recall_at_3": 0.8333333333333334,
+  "recall_at_5": 0.8333333333333334,
+  "latency_mean_ms": 10.599,
+  "latency_p95_ms": 12.192,
+  "cold_start_ms": 38.433,
+  "warmup_error": null,
+  "unauthorized_requests_refused": 4,
+  "security_probes": 4,
+  "transaction_identifiers": [
+    {
+      "requested": "TX-0003699",
+      "preserved": true,
+      "rows_found": 1
+    },
+    {
+      "requested": "TX-00003699",
+      "preserved": true,
+      "rows_found": 0
+    }
+  ],
+  "controlled_sql_provenance_valid": true,
+  "limitations": [
+    "Small curated corpus, no claim of production generalization.",
+    "Out-of-scope control excluded from recall denominator; spurious hits retained.",
+    "Governance integration is also covered by pytest; no claim of general hallucination immunity."
+  ],
+  "results": [
+    {
+      "question": "Quelles vérifications faire pour des paiements refusés ?",
+      "expected_sources": [
+        "01_payment_failures.md"
+      ],
+      "retrieved_sources": [],
+      "chunks": [],
+      "scores": [],
+      "recall_at_3": 0.0,
+      "recall_at_5": 0.0,
+      "latency_ms": 10.944,
+      "error": null
+    },
+    {
+      "question": "How to correlate failed payments with gateway code and idempotency key?",
+      "expected_sources": [
+        "01_payment_failures.md"
+      ],
+      "retrieved_sources": [
+        "01_payment_failures.md",
+        "05_data_quality.md",
+        "04_airflow_retry.md",
+        "03_spark_schema_drift.md",
+        "06_llm_governance.md"
+      ],
+      "chunks": [
+        "012b4203-7b9f-50b2-927b-8447243c0a72",
+        "7b1e0edc-f53a-5f4d-980d-cb8ce1895775",
+        "cc777740-dd8b-5a14-928a-74ababa6aba8",
+        "9b36d0b1-2433-5c57-b48d-e8be58094bfb",
+        "9daa7fe5-e763-5255-be18-52e463c25fee"
+      ],
+      "scores": [
+        0.220187,
+        0.063372,
+        0.058052,
+        0.055199,
+        0.033533
+      ],
+      "recall_at_3": 1.0,
+      "recall_at_5": 1.0,
+      "latency_ms": 11.257,
+      "error": null
+    },
+    {
+      "question": "Un paiement failed_high_value est-il une fraude prouvée ?",
+      "expected_sources": [
+        "01_payment_failures.md"
+      ],
+      "retrieved_sources": [
+        "01_payment_failures.md"
+      ],
+      "chunks": [
+        "012b4203-7b9f-50b2-927b-8447243c0a72"
+      ],
+      "scores": [
+        0.074544
+      ],
+      "recall_at_3": 1.0,
+      "recall_at_5": 1.0,
+      "latency_ms": 9.946,
+      "error": null
+    },
+    {
+      "question": "Comment examiner une remise promotionnelle excessive ?",
+      "expected_sources": [
+        "02_extreme_discount.md"
+      ],
+      "retrieved_sources": [
+        "02_extreme_discount.md"
+      ],
+      "chunks": [
+        "458ecdb9-936e-5e69-8594-88d52237b4d1"
+      ],
+      "scores": [
+        0.097014
+      ],
+      "recall_at_3": 1.0,
+      "recall_at_5": 1.0,
+      "latency_ms": 10.381,
+      "error": null
+    },
+    {
+      "question": "What pricing and campaign checks apply to discount_pct above 0.7?",
+      "expected_sources": [
+        "02_extreme_discount.md"
+      ],
+      "retrieved_sources": [
+        "02_extreme_discount.md",
+        "05_data_quality.md",
+        "04_airflow_retry.md",
+        "03_spark_schema_drift.md",
+        "01_payment_failures.md"
+      ],
+      "chunks": [
+        "458ecdb9-936e-5e69-8594-88d52237b4d1",
+        "7b1e0edc-f53a-5f4d-980d-cb8ce1895775",
+        "cc777740-dd8b-5a14-928a-74ababa6aba8",
+        "9b36d0b1-2433-5c57-b48d-e8be58094bfb",
+        "012b4203-7b9f-50b2-927b-8447243c0a72"
+      ],
+      "scores": [
+        0.181138,
+        0.109846,
+        0.075786,
+        0.047032,
+        0.02573
+      ],
+      "recall_at_3": 1.0,
+      "recall_at_5": 1.0,
+      "latency_ms": 10.803,
+      "error": null
+    },
+    {
+      "question": "Faut-il comparer les promotions approuvées et la devise avant une revue humaine ?",
+      "expected_sources": [
+        "02_extreme_discount.md"
+      ],
+      "retrieved_sources": [],
+      "chunks": [],
+      "scores": [],
+      "recall_at_3": 0.0,
+      "recall_at_5": 0.0,
+      "latency_ms": 11.837,
+      "error": null
+    },
+    {
+      "question": "Comment diagnostiquer une erreur de schéma Spark ?",
+      "expected_sources": [
+        "03_spark_schema_drift.md"
+      ],
+      "retrieved_sources": [
+        "03_spark_schema_drift.md"
+      ],
+      "chunks": [
+        "9b36d0b1-2433-5c57-b48d-e8be58094bfb"
+      ],
+      "scores": [
+        0.240405
+      ],
+      "recall_at_3": 1.0,
+      "recall_at_5": 1.0,
+      "latency_ms": 9.784,
+      "error": null
+    },
+    {
+      "question": "Which checks detect failed casts, null ratios and incompatible timestamps in CSV ingestion?",
+      "expected_sources": [
+        "03_spark_schema_drift.md"
+      ],
+      "retrieved_sources": [
+        "03_spark_schema_drift.md",
+        "02_extreme_discount.md",
+        "05_data_quality.md",
+        "01_payment_failures.md",
+        "04_airflow_retry.md"
+      ],
+      "chunks": [
+        "9b36d0b1-2433-5c57-b48d-e8be58094bfb",
+        "458ecdb9-936e-5e69-8594-88d52237b4d1",
+        "7b1e0edc-f53a-5f4d-980d-cb8ce1895775",
+        "012b4203-7b9f-50b2-927b-8447243c0a72",
+        "cc777740-dd8b-5a14-928a-74ababa6aba8"
+      ],
+      "scores": [
+        0.325605,
+        0.040479,
+        0.033304,
+        0.028552,
+        0.027833
+      ],
+      "recall_at_3": 1.0,
+      "recall_at_5": 1.0,
+      "latency_ms": 9.667,
+      "error": null
+    },
+    {
+      "question": "Peut-on déduire une colonne en panne sans journal Spark précis ?",
+      "expected_sources": [
+        "03_spark_schema_drift.md"
+      ],
+      "retrieved_sources": [
+        "03_spark_schema_drift.md",
+        "01_payment_failures.md"
+      ],
+      "chunks": [
+        "9b36d0b1-2433-5c57-b48d-e8be58094bfb",
+        "012b4203-7b9f-50b2-927b-8447243c0a72"
+      ],
+      "scores": [
+        0.060101,
+        0.05271
+      ],
+      "recall_at_3": 1.0,
+      "recall_at_5": 1.0,
+      "latency_ms": 15.381,
+      "error": null
+    },
+    {
+      "question": "Que faire si un pipeline Airflow échoue ?",
+      "expected_sources": [
+        "04_airflow_retry.md"
+      ],
+      "retrieved_sources": [
+        "04_airflow_retry.md"
+      ],
+      "chunks": [
+        "cc777740-dd8b-5a14-928a-74ababa6aba8"
+      ],
+      "scores": [
+        0.099519
+      ],
+      "recall_at_3": 1.0,
+      "recall_at_5": 1.0,
+      "latency_ms": 10.565,
+      "error": null
+    },
+    {
+      "question": "Which task attempts, scheduler logs and upstream dependencies should be inspected for DAG failures?",
+      "expected_sources": [
+        "04_airflow_retry.md"
+      ],
+      "retrieved_sources": [
+        "04_airflow_retry.md",
+        "01_payment_failures.md",
+        "03_spark_schema_drift.md",
+        "05_data_quality.md",
+        "06_llm_governance.md"
+      ],
+      "chunks": [
+        "cc777740-dd8b-5a14-928a-74ababa6aba8",
+        "012b4203-7b9f-50b2-927b-8447243c0a72",
+        "9b36d0b1-2433-5c57-b48d-e8be58094bfb",
+        "7b1e0edc-f53a-5f4d-980d-cb8ce1895775",
+        "9daa7fe5-e763-5255-be18-52e463c25fee"
+      ],
+      "scores": [
+        0.293347,
+        0.104355,
+        0.069311,
+        0.059061,
+        0.039354
+      ],
+      "recall_at_3": 1.0,
+      "recall_at_5": 1.0,
+      "latency_ms": 11.115,
+      "error": null
+    },
+    {
+      "question": "Les retries Airflow réparent-ils des colonnes obligatoires manquantes ?",
+      "expected_sources": [
+        "04_airflow_retry.md"
+      ],
+      "retrieved_sources": [
+        "04_airflow_retry.md"
+      ],
+      "chunks": [
+        "cc777740-dd8b-5a14-928a-74ababa6aba8"
+      ],
+      "scores": [
+        0.211111
+      ],
+      "recall_at_3": 1.0,
+      "recall_at_5": 1.0,
+      "latency_ms": 9.47,
+      "error": null
+    },
+    {
+      "question": "Quelles vérifications effectuer après un test dbt échoué ?",
+      "expected_sources": [
+        "05_data_quality.md"
+      ],
+      "retrieved_sources": [
+        "05_data_quality.md",
+        "01_payment_failures.md"
+      ],
+      "chunks": [
+        "7b1e0edc-f53a-5f4d-980d-cb8ce1895775",
+        "012b4203-7b9f-50b2-927b-8447243c0a72"
+      ],
+      "scores": [
+        0.119075,
+        0.03876
+      ],
+      "recall_at_3": 1.0,
+      "recall_at_5": 1.0,
+      "latency_ms": 9.829,
+      "error": null
+    },
+    {
+      "question": "Quels contrôles qualité sont recommandés pour les identifiants et les montants ?",
+      "expected_sources": [
+        "05_data_quality.md"
+      ],
+      "retrieved_sources": [],
+      "chunks": [],
+      "scores": [],
+      "recall_at_3": 0.0,
+      "recall_at_5": 0.0,
+      "latency_ms": 9.287,
+      "error": null
+    },
+    {
+      "question": "Why exclude synthetic labels from features and use time-ordered holdout evaluation?",
+      "expected_sources": [
+        "05_data_quality.md"
+      ],
+      "retrieved_sources": [
+        "05_data_quality.md",
+        "03_spark_schema_drift.md",
+        "02_extreme_discount.md",
+        "06_llm_governance.md",
+        "01_payment_failures.md"
+      ],
+      "chunks": [
+        "7b1e0edc-f53a-5f4d-980d-cb8ce1895775",
+        "9b36d0b1-2433-5c57-b48d-e8be58094bfb",
+        "458ecdb9-936e-5e69-8594-88d52237b4d1",
+        "9daa7fe5-e763-5255-be18-52e463c25fee",
+        "012b4203-7b9f-50b2-927b-8447243c0a72"
+      ],
+      "scores": [
+        0.363124,
+        0.030562,
+        0.029552,
+        0.028447,
+        0.026887
+      ],
+      "recall_at_3": 1.0,
+      "recall_at_5": 1.0,
+      "latency_ms": 10.99,
+      "error": null
+    },
+    {
+      "question": "Comment séparer preuves observées, hypothèses et recommandations de l'agent ?",
+      "expected_sources": [
+        "06_llm_governance.md"
+      ],
+      "retrieved_sources": [
+        "06_llm_governance.md",
+        "04_airflow_retry.md",
+        "02_extreme_discount.md"
+      ],
+      "chunks": [
+        "9daa7fe5-e763-5255-be18-52e463c25fee",
+        "cc777740-dd8b-5a14-928a-74ababa6aba8",
+        "458ecdb9-936e-5e69-8594-88d52237b4d1"
+      ],
+      "scores": [
+        0.109542,
+        0.068898,
+        0.067164
+      ],
+      "recall_at_3": 1.0,
+      "recall_at_5": 1.0,
+      "latency_ms": 11.302,
+      "error": null
+    },
+    {
+      "question": "What actions are forbidden to the governed read-only investigation agent?",
+      "expected_sources": [
+        "06_llm_governance.md"
+      ],
+      "retrieved_sources": [
+        "06_llm_governance.md",
+        "05_data_quality.md",
+        "04_airflow_retry.md",
+        "01_payment_failures.md",
+        "02_extreme_discount.md"
+      ],
+      "chunks": [
+        "9daa7fe5-e763-5255-be18-52e463c25fee",
+        "7b1e0edc-f53a-5f4d-980d-cb8ce1895775",
+        "cc777740-dd8b-5a14-928a-74ababa6aba8",
+        "012b4203-7b9f-50b2-927b-8447243c0a72",
+        "458ecdb9-936e-5e69-8594-88d52237b4d1"
+      ],
+      "scores": [
+        0.192686,
+        0.118071,
+        0.093746,
+        0.059412,
+        0.053694
+      ],
+      "recall_at_3": 1.0,
+      "recall_at_5": 1.0,
+      "latency_ms": 9.492,
+      "error": null
+    },
+    {
+      "question": "Les citations du RAG prouvent-elles une cause racine ?",
+      "expected_sources": [
+        "06_llm_governance.md"
+      ],
+      "retrieved_sources": [
+        "06_llm_governance.md",
+        "04_airflow_retry.md"
+      ],
+      "chunks": [
+        "9daa7fe5-e763-5255-be18-52e463c25fee",
+        "cc777740-dd8b-5a14-928a-74ababa6aba8"
+      ],
+      "scores": [
+        0.102311,
+        0.051746
+      ],
+      "recall_at_3": 1.0,
+      "recall_at_5": 1.0,
+      "latency_ms": 9.992,
+      "error": null
+    },
+    {
+      "question": "Quelle est la météo sur Mars demain ?",
+      "expected_sources": [],
+      "retrieved_sources": [],
+      "chunks": [],
+      "scores": [],
+      "recall_at_3": null,
+      "recall_at_5": null,
+      "latency_ms": 9.331,
+      "error": null
+    }
+  ]
+}

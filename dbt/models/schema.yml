@@ -1,0 +1,21 @@
+version: 2
+models:
+  - name: stg_transactions
+    description: Cleaned synthetic transaction dataset
+    columns:
+      - name: transaction_id
+        tests: [not_null, unique]
+      - name: transaction_day
+        tests: [not_null]
+      - name: total_amount
+        tests: [not_null]
+      - name: region
+        tests: [not_null]
+  - name: mart_daily_sales
+    columns:
+      - name: transaction_day
+        tests: [not_null, unique]
+  - name: mart_region_sales
+    columns:
+      - name: region
+        tests: [not_null, unique]

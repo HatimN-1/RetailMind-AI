@@ -1,0 +1,137 @@
+{
+  "question": "Que vérifier après un échec du pipeline Airflow ?",
+  "intent": "pipeline",
+  "route": "docs_only",
+  "evidence": [],
+  "sql_proofs": [],
+  "sources": [
+    {
+      "source": "docs/runbooks/04_airflow_retry.md",
+      "title": "04 airflow retry",
+      "text": "# Airflow DAG failures, retries and dependencies\n\nDAG: retailmind_data_ml_pipeline. Tasks: generate_transactions -> quality_gated_etl ->\nbuild_warehouse -> train_and_evaluate. Inspect task attempt, exit code, scheduler logs,\nupstream tasks, permissions and available disk before attributing a root cause.",
+      "chunk_id": "93d9f7ee-15bd-5f31-acf2-cc9a7e23bc28",
+      "start_char": 0,
+      "end_char": 304,
+      "start_line": 1,
+      "end_line": 5,
+      "index_fingerprint": "b5f39abab53683a9ac7cb4e63c649b51ea6096c4a5149e3f934add94fbeb3588",
+      "embedding_config": {
+        "model": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+        "revision": "e8f8c211226b894fcb81acc59f3b34ba3efd5f42",
+        "chunk_tokens": 96,
+        "overlap": 16,
+        "schema": 3
+      },
+      "dimension": 384,
+      "max_seq_length": 128,
+      "score": 0.4250001552216079,
+      "backend": "qdrant",
+      "strategy": "component_scoped_semantic",
+      "quarantined": false
+    },
+    {
+      "source": "docs/runbooks/04_airflow_retry.md",
+      "title": "04 airflow retry",
+      "text": "stream tasks, permissions and available disk before attributing a root cause.\n\nRetries may recover transient errors but not missing required columns. The agent only\nrecommends checks; the operator decides whether to rerun a task.",
+      "chunk_id": "2edd9171-d063-534b-b240-4cd612ca39ce",
+      "start_char": 227,
+      "end_char": 456,
+      "start_line": 5,
+      "end_line": 8,
+      "index_fingerprint": "b5f39abab53683a9ac7cb4e63c649b51ea6096c4a5149e3f934add94fbeb3588",
+      "embedding_config": {
+        "model": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+        "revision": "e8f8c211226b894fcb81acc59f3b34ba3efd5f42",
+        "chunk_tokens": 96,
+        "overlap": 16,
+        "schema": 3
+      },
+      "dimension": 384,
+      "max_seq_length": 128,
+      "score": 0.28104002987005844,
+      "backend": "qdrant",
+      "strategy": "component_scoped_semantic",
+      "quarantined": false
+    }
+  ],
+  "answer": "FAITS OBSERVÉS — données synthétiques\nAucun journal d'incident d'exécution n'est connecté. Les preuves SQL sont absentes ou la transaction est introuvable.\n\nHYPOTHÈSES\nAucune cause racine établie. Les runbooks proposent des vérifications générales.\n\nVÉRIFICATIONS RECOMMANDÉES (extraits documentaires)\n- # Airflow DAG failures, retries and dependencies\n\nDAG: retailmind_data_ml_pipeline. Tasks: generate_transactions -> quality_gated_etl ->\nbuild_warehouse -> train_and_evaluate. Inspect task attempt, exit code, scheduler logs,\nupstream tasks, permissions and available disk before attributing a root cause. [docs/runbooks/04_airflow_retry.md#93d9f7ee-15bd-5f31-acf2-cc9a7e23bc28]\n\nSOURCES\n- docs/runbooks/04_airflow_retry.md#93d9f7ee-15bd-5f31-acf2-cc9a7e23bc28 · qdrant · score=0.425\n- docs/runbooks/04_airflow_retry.md#2edd9171-d063-534b-b240-4cd612ca39ce · qdrant · score=0.281",
+  "mode": "langgraph+qdrant+ollama_extractive",
+  "retrieval_backend": "qdrant",
+  "workflow_backend": "langgraph",
+  "synthesis_backend": "ollama_extractive",
+  "steps": [
+    {
+      "node": "validation",
+      "status": "completed",
+      "latency_ms": 0.011
+    },
+    {
+      "node": "classification",
+      "status": "completed",
+      "latency_ms": 0.73
+    },
+    {
+      "node": "routing",
+      "status": "completed",
+      "latency_ms": 0.002
+    },
+    {
+      "node": "sql_evidence",
+      "status": "skipped",
+      "latency_ms": 0.002
+    },
+    {
+      "node": "document_retrieval",
+      "status": "completed",
+      "latency_ms": 9802.395
+    },
+    {
+      "node": "factual_context",
+      "status": "completed",
+      "latency_ms": 0.031
+    },
+    {
+      "node": "synthesis",
+      "status": "completed",
+      "latency_ms": 10906.732
+    },
+    {
+      "node": "verification",
+      "status": "completed",
+      "latency_ms": 0.014
+    },
+    {
+      "node": "final_report",
+      "status": "completed",
+      "latency_ms": 0.018
+    }
+  ],
+  "warnings": [
+    "Anomalies synthétiques : aucune fraude réelle confirmée.",
+    "Les recommandations documentaires ne prouvent pas une cause racine."
+  ],
+  "observations": [],
+  "hypotheses": [
+    "Aucune cause racine établie. Les runbooks proposent des vérifications générales."
+  ],
+  "recommendations": [
+    {
+      "text": "# Airflow DAG failures, retries and dependencies\n\nDAG: retailmind_data_ml_pipeline. Tasks: generate_transactions -> quality_gated_etl ->\nbuild_warehouse -> train_and_evaluate. Inspect task attempt, exit code, scheduler logs,\nupstream tasks, permissions and available disk before attributing a root cause.",
+      "references": [
+        "93d9f7ee-15bd-5f31-acf2-cc9a7e23bc28"
+      ],
+      "source": "docs/runbooks/04_airflow_retry.md"
+    }
+  ],
+  "ollama_attempted": true,
+  "ollama_used": true,
+  "verification": {
+    "sql_provenance_valid": true,
+    "document_claims": "cited_excerpts_only",
+    "llm_candidate_accepted": true,
+    "root_cause_proven": false
+  },
+  "correlation_id": "e3deec9f-7217-428c-8ca2-4d2b6ec9d231",
+  "latency_ms": 21737.785,
+  "tested_ollama_model": "qwen3:1.7b"
+}

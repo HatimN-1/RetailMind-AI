@@ -1,0 +1,93 @@
+# Minimal single-pod, ephemeral demo; not a production-ready HA deployment.
+# Build retailmind-ai:local and load it into minikube before applying.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: retailmind
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: retailmind
+  template:
+    metadata:
+      labels:
+        app: retailmind
+    spec:
+      volumes:
+        - name: dataset
+          emptyDir: {}
+      initContainers:
+        - name: bootstrap
+          image: retailmind-ai:local
+          imagePullPolicy: Never
+          command: ["python", "-m", "retailmind.bootstrap", "--rows", "2000"]
+          volumeMounts:
+            - name: dataset
+              mountPath: /app/data
+      containers:
+        - name: api
+          image: retailmind-ai:local
+          imagePullPolicy: Never
+          command: ["python", "-m", "uvicorn", "retailmind.api:app", "--host", "0.0.0.0", "--port", "8000"]
+          volumeMounts:
+            - name: dataset
+              mountPath: /app/data
+              readOnly: true
+          ports:
+            - containerPort: 8000
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: 8000
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          resources:
+            requests:
+              memory: 256Mi
+              cpu: 100m
+            limits:
+              memory: 768Mi
+              cpu: 1000m
+        - name: frontend
+          image: retailmind-frontend:local
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              memory: 64Mi
+              cpu: 50m
+            limits:
+              memory: 256Mi
+              cpu: 500m
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: retailmind
+spec:
+  type: ClusterIP
+  selector:
+    app: retailmind
+  ports:
+    - name: api
+      port: 8000
+      targetPort: 8000
+    - name: web
+      port: 80
+      targetPort: 80
+---
+# Stable DNS name for frontend/nginx.conf reverse proxy, inside this namespace.
+apiVersion: v1
+kind: Service
+metadata:
+  name: api
+spec:
+  type: ClusterIP
+  selector:
+    app: retailmind
+  ports:
+    - name: http
+      port: 8000
+      targetPort: 8000

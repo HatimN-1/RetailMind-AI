@@ -1,0 +1,8 @@
+retailmind:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      path: '../data/marts/retailmind.duckdb'
+      schema: main
+      threads: 2

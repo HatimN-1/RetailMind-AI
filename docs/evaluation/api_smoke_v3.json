@@ -1,0 +1,75 @@
+{
+  "http_routes_ok": {
+    "/health": true,
+    "/ready": true,
+    "/metrics": true,
+    "/analytics": true,
+    "/transactions": true,
+    "/transactions-page": true,
+    "/alerts": true,
+    "/alerts-page": true,
+    "/quality": true,
+    "/model-evaluation": true,
+    "/rag/status": true,
+    "/investigation-status": true,
+    "/rag/documents/04_airflow_retry.md": true
+  },
+  "predict_ok": true,
+  "mode": "langgraph+qdrant+deterministic",
+  "steps": [
+    {
+      "node": "validation",
+      "status": "completed",
+      "latency_ms": 0.008
+    },
+    {
+      "node": "classification",
+      "status": "completed",
+      "latency_ms": 0.606
+    },
+    {
+      "node": "routing",
+      "status": "completed",
+      "latency_ms": 0.002
+    },
+    {
+      "node": "sql_evidence",
+      "status": "completed",
+      "latency_ms": 1.207
+    },
+    {
+      "node": "document_retrieval",
+      "status": "completed",
+      "latency_ms": 9049.672
+    },
+    {
+      "node": "factual_context",
+      "status": "completed",
+      "latency_ms": 0.067
+    },
+    {
+      "node": "synthesis",
+      "status": "completed",
+      "latency_ms": 0.01
+    },
+    {
+      "node": "verification",
+      "status": "completed",
+      "latency_ms": 0.009
+    },
+    {
+      "node": "final_report",
+      "status": "completed",
+      "latency_ms": 0.022
+    }
+  ],
+  "correlation_id": "ec657023-7314-453b-8353-093f79bb7b94",
+  "latency_ms": 9798.408,
+  "transaction_id_preserved": true,
+  "ollama_disabled": true,
+  "sources_returned": 2,
+  "pipeline_sources": [
+    "docs/runbooks/04_airflow_retry.md",
+    "docs/runbooks/04_airflow_retry.md"
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {"name": "RetailMind API (FastAPI)", "type": "debugpy", "request": "launch", "module": "uvicorn", "args": ["retailmind.api:app", "--reload", "--port", "8000"], "console": "integratedTerminal", "justMyCode": true},
+    {"name": "RetailMind Bootstrap", "type": "debugpy", "request": "launch", "module": "retailmind.bootstrap", "args": ["--rows", "5000"], "console": "integratedTerminal"}
+  ]
+}

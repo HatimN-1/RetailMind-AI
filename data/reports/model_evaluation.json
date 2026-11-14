@@ -1,0 +1,29 @@
+{
+  "protocol": "time_ordered_train_75pct_test_25pct",
+  "dataset": "synthetic_labeled_transactions",
+  "train_rows": 3750,
+  "test_rows": 1250,
+  "training_labels_used": false,
+  "test_labels_used_for_scoring_only": true,
+  "isolation_forest": {
+    "precision": 0.5396825396825397,
+    "recall": 0.34,
+    "f1": 0.4171779141104294,
+    "anomalies_predicted": 63,
+    "average_precision": 0.5973465792497301,
+    "roc_auc": 0.9457739130434782
+  },
+  "isolation_forest_threshold": 0.5735191472655324,
+  "autoencoder_pytorch": {
+    "precision": 0.8764044943820225,
+    "recall": 0.78,
+    "f1": 0.8253968253968254,
+    "anomalies_predicted": 89,
+    "average_precision": 0.8635789664657119,
+    "roc_auc": 0.9467043478260869,
+    "epochs": 12,
+    "threshold": 0.7971300482749939,
+    "architecture": "MLP_autoencoder_24_8_24",
+    "note": "Reconstruction error; labels used only for holdout evaluation."
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "python": "3.11.9 (tags/v3.11.9:de54cf5, Apr  2 2024, 10:12:12) [MSC v.1938 64 bit (AMD64)]",
+  "packages": {
+    "qdrant-client": "1.20.0",
+    "sentence-transformers": "5.7.0",
+    "langgraph": "1.2.22",
+    "torch": "2.15.0",
+    "python-dotenv": "1.2.4",
+    "transformers": "5.23.0",
+    "tokenizers": "0.23.3",
+    "huggingface-hub": "2.4.0",
+    "grpcio": "1.85.1",
+    "portalocker": "4.4.2",
+    "protobuf": "7.36.2",
+    "tqdm": "4.70.1",
+    "hf-xet": "1.8.0",
+    "regex": "2026.11.9",
+    "safetensors": "0.8.0",
+    "typer": "0.29.1",
+    "shellingham": "1.5.4",
+    "rich": "15.0.0",
+    "markdown-it-py": "4.3.0",
+    "mdurl": "0.1.2",
+    "h2": "4.4.1",
+    "hpack": "4.2.0",
+    "hyperframe": "6.1.0"
+  }
+}

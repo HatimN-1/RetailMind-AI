@@ -1,0 +1,61 @@
+services:
+  bootstrap:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    image: retailmind-ai:local
+    command: ["python", "-m", "retailmind.bootstrap", "--rows", "5000"]
+    volumes:
+      - retailmind_data:/app/data
+  api:
+    image: retailmind-ai:local
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    depends_on:
+      bootstrap:
+        condition: service_completed_successfully
+    command: ["python", "-m", "uvicorn", "retailmind.api:app", "--host", "0.0.0.0", "--port", "8000"]
+    volumes:
+      - retailmind_data:/app/data:ro
+    ports:
+      - "127.0.0.1:8000:8000"
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    image: retailmind-frontend:local
+    depends_on:
+      api:
+        condition: service_started
+    ports:
+      - "127.0.0.1:5173:80"
+  qdrant:
+    image: qdrant/qdrant:v1.12.5
+    profiles: ["rag"]
+    volumes:
+      - qdrant_data:/qdrant/storage
+    ports:
+      - "127.0.0.1:6333:6333"
+  airflow:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.airflow
+    profiles: ["airflow"]
+    environment:
+      AIRFLOW__CORE__EXECUTOR: SequentialExecutor
+      AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
+      PYTHONPATH: /opt/airflow/project/src
+      RETAILMIND_HOME: /opt/airflow
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: sqlite:////opt/airflow/airflow.db
+    volumes:
+      - ./:/opt/airflow/project
+      - ./airflow/dags:/opt/airflow/dags
+      - airflow_state:/opt/airflow
+    command: ["bash", "-c", "airflow db migrate && airflow users create --username admin --firstname Retail --lastname Analyst --role Admin --email admin@localhost --password change-me-local || true; airflow webserver --port 8080 & airflow scheduler"]
+    ports:
+      - "127.0.0.1:8080:8080"
+volumes:
+  retailmind_data:
+  qdrant_data:
+  airflow_state:

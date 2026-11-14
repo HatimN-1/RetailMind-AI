@@ -1,0 +1,21 @@
+[
+  {"question":"Quelles vérifications faire pour des paiements refusés ?","expected_sources":["01_payment_failures.md"]},
+  {"question":"How to correlate failed payments with gateway code and idempotency key?","expected_sources":["01_payment_failures.md"]},
+  {"question":"Un paiement failed_high_value est-il une fraude prouvée ?","expected_sources":["01_payment_failures.md"]},
+  {"question":"Comment examiner une remise promotionnelle excessive ?","expected_sources":["02_extreme_discount.md"]},
+  {"question":"What pricing and campaign checks apply to discount_pct above 0.7?","expected_sources":["02_extreme_discount.md"]},
+  {"question":"Faut-il comparer les promotions approuvées et la devise avant une revue humaine ?","expected_sources":["02_extreme_discount.md"]},
+  {"question":"Comment diagnostiquer une erreur de schéma Spark ?","expected_sources":["03_spark_schema_drift.md"]},
+  {"question":"Which checks detect failed casts, null ratios and incompatible timestamps in CSV ingestion?","expected_sources":["03_spark_schema_drift.md"]},
+  {"question":"Peut-on déduire une colonne en panne sans journal Spark précis ?","expected_sources":["03_spark_schema_drift.md"]},
+  {"question":"Que faire si un pipeline Airflow échoue ?","expected_sources":["04_airflow_retry.md"]},
+  {"question":"Which task attempts, scheduler logs and upstream dependencies should be inspected for DAG failures?","expected_sources":["04_airflow_retry.md"]},
+  {"question":"Les retries Airflow réparent-ils des colonnes obligatoires manquantes ?","expected_sources":["04_airflow_retry.md"]},
+  {"question":"Quelles vérifications effectuer après un test dbt échoué ?","expected_sources":["05_data_quality.md"]},
+  {"question":"Quels contrôles qualité sont recommandés pour les identifiants et les montants ?","expected_sources":["05_data_quality.md"]},
+  {"question":"Why exclude synthetic labels from features and use time-ordered holdout evaluation?","expected_sources":["05_data_quality.md"]},
+  {"question":"Comment séparer preuves observées, hypothèses et recommandations de l'agent ?","expected_sources":["06_llm_governance.md"]},
+  {"question":"What actions are forbidden to the governed read-only investigation agent?","expected_sources":["06_llm_governance.md"]},
+  {"question":"Les citations du RAG prouvent-elles une cause racine ?","expected_sources":["06_llm_governance.md"]},
+  {"question":"Quelle est la météo sur Mars demain ?","expected_sources":[]}
+]

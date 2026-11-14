@@ -1,0 +1,10 @@
+{
+  "source_rows": 5025,
+  "curated_rows": 5000,
+  "dropped_rows": 25,
+  "duplicate_transaction_ids_in_source": 25,
+  "positive_amounts": true,
+  "unique_ids": true,
+  "output": "C:\\Users\\pc\\Downloads\\RetailMind_AI_Pro_React_Hatim_Nadir_V2\\retailmind-ai\\data\\curated\\transactions_clean.csv",
+  "note": "Injected labels are for offline evaluation, not production ground truth."
+}

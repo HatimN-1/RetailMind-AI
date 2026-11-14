@@ -1,0 +1,11 @@
+name: retailmind_analytics
+version: '1.0.0'
+config-version: 2
+profile: retailmind
+model-paths: ["models"]
+test-paths: ["tests"]
+models:
+  retailmind_analytics:
+    +materialized: view
+    marts:
+      +materialized: table

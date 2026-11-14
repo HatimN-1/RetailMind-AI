@@ -1,0 +1,136 @@
+{
+  "api_url": "http://127.0.0.1:43090",
+  "frontend_url": "http://127.0.0.1:43091",
+  "passed": true,
+  "http": [
+    {
+      "case": "direct_health",
+      "status": 200
+    },
+    {
+      "case": "direct_sequential",
+      "status": 200,
+      "mode": "sequential+qdrant+deterministic",
+      "steps": 9,
+      "sql_rows": 1,
+      "latency_ms": 12715.241
+    },
+    {
+      "case": "direct_graph",
+      "status": 200,
+      "mode": "langgraph+qdrant+deterministic",
+      "steps": 9,
+      "sql_rows": 1,
+      "latency_ms": 977.792
+    },
+    {
+      "case": "direct_airflow",
+      "status": 200,
+      "mode": "langgraph+qdrant+deterministic",
+      "sources": [
+        "docs/runbooks/04_airflow_retry.md",
+        "docs/runbooks/04_airflow_retry.md"
+      ]
+    },
+    {
+      "case": "direct_validation",
+      "status": 422
+    },
+    {
+      "case": "vite_proxy_health",
+      "status": 200
+    },
+    {
+      "case": "vite_proxy_sequential",
+      "status": 200,
+      "mode": "sequential+qdrant+deterministic",
+      "steps": 9,
+      "sql_rows": 1,
+      "latency_ms": 91.713
+    },
+    {
+      "case": "vite_proxy_graph",
+      "status": 200,
+      "mode": "langgraph+qdrant+deterministic",
+      "steps": 9,
+      "sql_rows": 1,
+      "latency_ms": 126.897
+    },
+    {
+      "case": "vite_proxy_airflow",
+      "status": 200,
+      "mode": "langgraph+qdrant+deterministic",
+      "sources": [
+        "docs/runbooks/04_airflow_retry.md",
+        "docs/runbooks/04_airflow_retry.md"
+      ]
+    },
+    {
+      "case": "vite_proxy_validation",
+      "status": 422
+    }
+  ],
+  "browser": {
+    "native_scroll": {
+      "thenable": true,
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/157.0.0.0 Safari/537.36"
+    },
+    "promise_scroll_regression_enabled": true,
+    "page_errors": [],
+    "console_errors": [
+      "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "Failed to load resource: the server responded with a status of 422 (Unprocessable Entity)",
+      "Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+      "Failed to load resource: the server responded with a status of 504 (Gateway Timeout)"
+    ],
+    "checks": [
+      {
+        "case": "transaction_sql_rendered",
+        "http_status": 200,
+        "mode": "langgraph+qdrant+deterministic"
+      },
+      {
+        "case": "sequential_request_and_render",
+        "http_status": 200
+      },
+      {
+        "case": "airflow_sources_scores_full_document",
+        "http_status": 200
+      },
+      {
+        "case": "actual_qdrant_lock_visible_fallback",
+        "http_status": 200,
+        "mode": "langgraph+tfidf+deterministic"
+      },
+      {
+        "case": "actual_pydantic_422_readable",
+        "http_status": 422
+      },
+      {
+        "case": "http_503",
+        "controlled_response": true,
+        "http_status": 503
+      },
+      {
+        "case": "http_504",
+        "controlled_response": true,
+        "http_status": 504
+      },
+      {
+        "case": "invalid_contract",
+        "controlled_response": true,
+        "http_status": 200
+      },
+      {
+        "case": "retry_real_request",
+        "http_status": 200
+      },
+      {
+        "case": "remount_themes_mobile",
+        "http_status": 200,
+        "mobile_http_status": 200
+      }
+    ],
+    "scope": "Real UI/proxy/API/SQL/Qdrant without Ollama; controlled failures explicitly labelled."
+  }
+}

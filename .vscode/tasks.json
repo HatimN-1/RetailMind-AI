@@ -1,0 +1,13 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {"label": "RetailMind: API Windows", "type": "shell", "command": "powershell -NoProfile -ExecutionPolicy Bypass -File ./scripts/run_api_windows.ps1", "isBackground": true},
+    {"label": "RetailMind: React Frontend", "type": "shell", "command": "npm.cmd run dev", "options": {"cwd": "${workspaceFolder}/frontend"}, "isBackground": true},
+    {"label": "RetailMind: Bootstrap Windows", "type": "shell", "command": "powershell -NoProfile -ExecutionPolicy Bypass -File ./scripts/run_bootstrap_windows.ps1", "group": "build"},
+    {"label": "RetailMind: Python Tests", "type": "shell", "command": "powershell -NoProfile -ExecutionPolicy Bypass -File ./scripts/run_tests_windows.ps1", "group": "test"},
+    {"label": "RetailMind: React Build", "type": "shell", "command": "npm.cmd run build", "options": {"cwd": "${workspaceFolder}/frontend"}, "group": "build"},
+    {"label": "RetailMind V3: Install RAG", "type": "shell", "command": "powershell -NoProfile -ExecutionPolicy Bypass -File ./scripts/setup_rag_windows.ps1"},
+    {"label": "RetailMind V3: Index RAG", "type": "shell", "command": "powershell -NoProfile -ExecutionPolicy Bypass -File ./scripts/index_rag_windows.ps1"},
+    {"label": "RetailMind V3: Evaluate Qdrant", "type": "shell", "command": "powershell -NoProfile -ExecutionPolicy Bypass -File ./scripts/evaluate_rag_windows.ps1 -Backend qdrant"}
+  ]
+}
