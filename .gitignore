@@ -44,3 +44,11 @@ data/qdrant_local/
 
 # Python packaging artifacts
 *.egg-info/
+
+# dbt build artifacts
+dbt/target/
+dbt/logs/
+dbt/packages/
+
+# dbt local user configuration
+dbt/.user.yml
