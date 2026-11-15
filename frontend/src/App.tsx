@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
-import { Activity, Bell, BrainCircuit, ChartNoAxesCombined, ChevronDown, DatabaseZap, LayoutDashboard, Menu, Moon, PanelLeftClose, Search, Settings2, ShieldAlert, Sun, TableProperties, Wifi, WifiOff, X } from 'lucide-react';
+import { Activity, Bell, BrainCircuit, ChartNoAxesCombined, ChevronDown, DatabaseZap, GitBranch, LayoutDashboard, Menu, Moon, PanelLeftClose, Search, Settings2, ShieldAlert, Sun, TableProperties, Wifi, WifiOff, X } from 'lucide-react';
 import Overview from './pages/Overview';
 import Transactions from './pages/Transactions';
 import Anomalies from './pages/Anomalies';
 import InvestigationPage from './pages/Investigation';
 import Quality from './pages/Quality';
+import Monitoring from './pages/Monitoring';
 import { api } from './api';
 import { useLoad } from './hooks';
 import type { PageId } from './types';
@@ -15,6 +16,7 @@ const menu: Array<{id:PageId;title:string;desc:string;icon:typeof LayoutDashboar
   {id:'anomalies',title:'Anomalies',desc:'Centre de surveillance',icon:ShieldAlert},
   {id:'investigation',title:'Investigation IA',desc:'Assistant gouverné',icon:BrainCircuit},
   {id:'quality',title:'Qualité & ML',desc:'Observabilité',icon:Activity},
+  {id:'monitoring',title:'Pipelines V4',desc:'Suivi Airflow & dbt',icon:GitBranch},
 ];
 
 export default function App() {
@@ -37,7 +39,7 @@ export default function App() {
       <div className="topbar-right"><button className="top-search" onClick={()=>navigate('transactions')}><Search size={16}/> <span>Explorer les données</span></button><button className="icon-button theme-button" aria-label="Changer le thème" title="Changer le thème" onClick={()=>setTheme(t=>t==='dark'?'light':'dark')}>{theme==='dark'?<Sun size={19}/>:<Moon size={19}/>}</button><button className="icon-button" aria-label="Actualiser la connexion" title="Actualiser la connexion" onClick={reloadHealth}><Bell size={19}/></button><span className="topbar-divider"/><div className="top-profile"><span>HN</span><ChevronDown size={14}/></div></div>
     </header>
     <main className="content"><div className="connection-strip"><div className={`connection-item ${health?.warehouse_ready?'online':''}`}>{health?.warehouse_ready?<Wifi size={14}/>:<WifiOff size={14}/>} {healthLoading?'Vérification du backend...':health?.warehouse_ready?'API FastAPI connectée':'API non connectée'}</div><div className="connection-second"><span className="dot-separator"/> Environnement Data & IA · Démonstration locale</div></div>
-      {page==='overview'&&<Overview onNavigate={navigate}/>} {page==='transactions'&&<Transactions/>} {page==='anomalies'&&<Anomalies/>} {page==='investigation'&&<InvestigationPage/>} {page==='quality'&&<Quality/>}
+      {page==='overview'&&<Overview onNavigate={navigate}/>} {page==='transactions'&&<Transactions/>} {page==='anomalies'&&<Anomalies/>} {page==='investigation'&&<InvestigationPage/>} {page==='quality'&&<Quality/>} {page==='monitoring'&&<Monitoring/>}
     </main>
     <footer className="app-footer"><span><ChartNoAxesCombined size={14}/> RetailMind AI · Portfolio technique</span><span>Version 2.0 · Données synthétiques · Aucun usage en production</span></footer>
     </div>

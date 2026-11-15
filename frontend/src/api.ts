@@ -78,8 +78,11 @@ function investigationResponse(value: unknown): Investigation {
   }
   return value as Investigation;
 }
+import type { MonitoringSnapshot } from './monitoringTypes';
+
 export const api = {
   health: () => request<{ service: string; warehouse_ready: boolean; data_type: string }>('/health'),
+  monitoring: () => request<MonitoringSnapshot>('/v4/monitoring'),
   analytics: (period: Period) => request<Analytics>(`/analytics?period=${period}`),
   transactions: (query: URLSearchParams) => request<PageResult<Transaction>>(`/transactions-page?${query}`),
   alerts: (query: URLSearchParams) => request<PageResult<Transaction>>(`/alerts-page?${query}`),

@@ -1,4 +1,4 @@
-export type PageId = 'overview' | 'transactions' | 'anomalies' | 'investigation' | 'quality';
+export type PageId = 'overview' | 'transactions' | 'anomalies' | 'investigation' | 'quality' | 'monitoring';
 export type Period = '7d' | '30d' | 'all';
 export type SortKey = 'recent' | 'oldest' | 'amount_desc' | 'amount_asc';
 export type Transaction = {

@@ -11,6 +11,7 @@ from uuid import uuid4
 import os
 from pydantic import BaseModel, Field, ConfigDict, field_validator
 from retailmind.settings import DB, REPORTS
+from retailmind.v4_monitoring import router as v4_monitoring_router
 from retailmind import warehouse
 from retailmind.agent import investigate, service_status
 from retailmind import retrieval
@@ -19,6 +20,7 @@ from retailmind.diagnostics import log_failure
 logger = logging.getLogger(__name__)
 
 app = FastAPI(title="RetailMind AI", version="0.3.0", description="Synthetic retail analytics and governed AI")
+app.include_router(v4_monitoring_router)
 
 # Explicit local development origins; reverse proxy serves same-origin in Docker.
 allowed_origins = ["http://localhost:5173", "http://127.0.0.1:5173"]

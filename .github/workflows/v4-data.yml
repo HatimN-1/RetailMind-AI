@@ -1,0 +1,100 @@
+name: RetailMind V4 data pipeline
+
+on:
+  push:
+    paths:
+      - '.github/workflows/v4-data.yml'
+      - 'pyproject.toml'
+      - 'src/retailmind/**'
+      - 'dbt/**'
+      - 'scripts/verify_dbt.py'
+      - 'scripts/check_v4_docker.py'
+      - 'tests/test_docker_smoke_v4.py'
+      - 'tests/test_spark_etl.py'
+      - 'tests/test_dbt_pipeline.py'
+      - 'tests/test_airflow_v4.py'
+      - 'airflow/dags/retailmind_v4_data_pipeline.py'
+      - 'docker-compose.yml'
+  pull_request:
+    paths:
+      - '.github/workflows/v4-data.yml'
+      - 'pyproject.toml'
+      - 'src/retailmind/**'
+      - 'dbt/**'
+      - 'scripts/verify_dbt.py'
+      - 'scripts/check_v4_docker.py'
+      - 'tests/test_docker_smoke_v4.py'
+      - 'tests/test_spark_etl.py'
+      - 'tests/test_dbt_pipeline.py'
+      - 'tests/test_airflow_v4.py'
+      - 'airflow/dags/retailmind_v4_data_pipeline.py'
+      - 'docker-compose.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: v4-data-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  data-engineering:
+    name: Spark, dbt, DuckDB, data contracts
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    env:
+      SPARK_LOCAL_IP: '127.0.0.1'
+      PYSPARK_PYTHON: python
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Install pinned V4 dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e '.[dev,spark,analytics]' \
+            'pyspark==4.0.5' 'pyarrow==24.0.0' \
+            'dbt-core==1.12.7' 'dbt-duckdb==1.11.1' 'duckdb==1.5.6'
+      - name: Validate Docker Compose configuration
+        run: docker compose --profile airflow config --quiet
+      - name: Generate deterministic synthetic data
+        run: python -m retailmind.generate --rows 5000 --seed 42
+      - name: Run real Spark ETL to Parquet
+        run: python -m retailmind.spark_etl --master 'local[2]'
+      - name: Build DuckDB marts with dbt tests
+        working-directory: dbt
+        run: |
+          dbt build --project-dir . --profiles-dir . --no-partial-parse \
+            --target-path ../data/dbt_target_ci --log-path ../data/dbt_logs_ci
+      - name: Reconcile data and validate seed-42 contract
+        run: |
+          mkdir -p data/reports
+          python scripts/verify_dbt.py > data/reports/v4_ci_validation.json
+          python - <<'PYTHON'
+          import json
+          from pathlib import Path
+
+          report = json.loads(Path('data/reports/v4_ci_validation.json').read_text(encoding='utf-8'))
+          expected = {
+              'status': 'passed', 'transactions': 5000,
+              'injected_anomalies': 334, 'paid_revenue_mad': 4003524.57,
+              'daily_mismatches': 0, 'region_mismatches': 0,
+          }
+          actual = {name: report.get(name) for name in expected}
+          assert actual == expected, f'Data contract failed: actual={actual}, expected={expected}'
+          print(json.dumps(report, indent=2))
+          PYTHON
+      - name: Test Spark, dbt and Airflow DAG wiring
+        run: python -m pytest tests/test_spark_etl.py tests/test_dbt_pipeline.py tests/test_airflow_v4.py tests/test_docker_smoke_v4.py -v
+      - name: Upload validation report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: retailmind-v4-data-contract
+          path: data/reports/v4_ci_validation.json
+          if-no-files-found: ignore

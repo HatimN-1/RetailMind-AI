@@ -44,3 +44,21 @@ data/qdrant_local/
 
 # Python packaging artifacts
 *.egg-info/
+
+# dbt build artifacts
+dbt/target/
+dbt/logs/
+dbt/packages/
+
+# dbt local user configuration
+dbt/.user.yml
+
+# V4 CI and Docker generated outputs
+data/reports/
+data/dbt_target_ci/
+data/dbt_logs_ci/
+data/dbt_target_airflow/
+data/dbt_logs_airflow/
+
+# V4.5 operator-refreshed monitoring snapshots
+monitoring/*.json

@@ -14,3 +14,14 @@ data/qdrant_local
 frontend/node_modules
 frontend/dist
 frontend/.env
+
+# Build artifacts generated on Windows / CI (not used by images)
+.env.*
+!.env.example
+.test-temp/
+dbt/target/
+dbt/logs/
+dbt/.user.yml
+data/reports/
+data/dbt_target_*/
+data/dbt_logs_*/
