@@ -59,3 +59,6 @@ data/dbt_target_ci/
 data/dbt_logs_ci/
 data/dbt_target_airflow/
 data/dbt_logs_airflow/
+
+# V4.5 operator-refreshed monitoring snapshots
+monitoring/*.json
