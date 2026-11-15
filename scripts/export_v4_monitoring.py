@@ -20,6 +20,10 @@ DAG_ID = "retailmind_v4_spark_dbt_pipeline"
 COMPOSE = ("docker", "compose", "--profile", "airflow")
 RUN_ID = re.compile(r"^[A-Za-z0-9_:+.\-]{1,240}$")
 FIELDS = ("task_id", "state", "start_date", "end_date")
+TASK_SEQUENCE = (
+    "generate_synthetic_transactions", "spark_etl_to_parquet",
+    "dbt_build_marts_and_tests", "verify_dbt_vs_spark",
+)
 RUN_FIELDS = ("run_id", "state", "execution_date", "start_date", "end_date")
 METRIC_FIELDS = ("source", "warehouse", "transactions", "injected_anomalies",
                  "paid_revenue_mad", "daily_mismatches", "region_mismatches", "status")
@@ -49,7 +53,7 @@ def duration_seconds(start: object, end: object) -> float | None:
         return None
     try:
         diff = (datetime.fromisoformat(end) - datetime.fromisoformat(start)).total_seconds()
-    except ValueError:
+    except (ValueError, TypeError, OverflowError):
         return None
     return round(diff, 3) if diff >= 0 else None
 
@@ -60,6 +64,20 @@ def clean_row(row: object, allowed: tuple[str, ...]) -> dict:
     return {key: row.get(key) if isinstance(row.get(key), str) else None for key in allowed}
 
 
+def run_sort_key(row: object) -> datetime:
+    """Order Airflow run dates by actual UTC time, not CLI output order."""
+    value = row.get("execution_date") if isinstance(row, dict) else None
+    if isinstance(value, str):
+        try:
+            stamp = datetime.fromisoformat(value.replace("Z", "+00:00"))
+            if stamp.tzinfo is None:
+                stamp = stamp.replace(tzinfo=timezone.utc)
+            return stamp.astimezone(timezone.utc)
+        except (ValueError, OverflowError):
+            pass
+    return datetime.min.replace(tzinfo=timezone.utc)
+
+
 def export_snapshot(*, limit: int = 10, with_data: bool = True) -> dict:
     if not 1 <= limit <= 20:
         raise ExportError("La limite doit être comprise entre 1 et 20")
@@ -67,11 +85,16 @@ def export_snapshot(*, limit: int = 10, with_data: bool = True) -> dict:
     if not isinstance(raw_runs, list):
         raise ExportError("Liste des exécutions Airflow invalide")
     runs = []
-    for raw_run in raw_runs[:limit]:
+    seen_ids: set[str] = set()
+    # A CLI version may return unsorted/duplicated rows; keep recent unique runs.
+    for raw_run in sorted(raw_runs, key=run_sort_key, reverse=True):
         run = clean_row(raw_run, RUN_FIELDS)
         run_id = run["run_id"]
         if not run_id or run_id.startswith("-") or not RUN_ID.fullmatch(run_id):
             raise ExportError("ID d'exécution Airflow inattendu")
+        if run_id in seen_ids:
+            continue
+        seen_ids.add(run_id)
         task_rows = docker_json("airflow", "tasks", "states-for-dag-run", DAG_ID, run_id, "-o", "json")
         if not isinstance(task_rows, list) or len(task_rows) > 200:
             raise ExportError("Liste des tâches Airflow invalide")
@@ -80,9 +103,13 @@ def export_snapshot(*, limit: int = 10, with_data: bool = True) -> dict:
             task = clean_row(raw_task, FIELDS)
             task["duration_seconds"] = duration_seconds(task["start_date"], task["end_date"])
             tasks.append(task)
+        tasks.sort(key=lambda task: (TASK_SEQUENCE.index(task["task_id"])
+                                    if task["task_id"] in TASK_SEQUENCE else len(TASK_SEQUENCE)))
         run["duration_seconds"] = duration_seconds(run["start_date"], run["end_date"])
         run["tasks"] = tasks
         runs.append(run)
+        if len(runs) == limit:
+            break
     metrics = None
     if with_data:
         raw_metrics = docker_json("/opt/retailmind-venv/bin/python",

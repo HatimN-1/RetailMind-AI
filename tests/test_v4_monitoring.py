@@ -128,3 +128,61 @@ def test_router_is_read_only(tmp_path: Path, monkeypatch):
     assert client.post("/v4/monitoring").status_code == 405
     path.unlink()
     assert client.get("/v4/monitoring").status_code == 503
+
+
+def test_history_is_sorted_newest_first_and_deduplicated(monkeypatch):
+    newest = {**RUN, "run_id": "manual__newest", "execution_date": "2026-11-15T08:00:00+00:00"}
+    older = {**RUN, "run_id": "manual__older", "execution_date": "2026-11-14T23:00:00+00:00"}
+    # Mix date formats/time zones and unsorted records: 09:00+01:00 == 08:00 UTC.
+    newest = {**newest, "execution_date": "2026-11-15T09:00:00+01:00"}
+    seen = []
+
+    def stub(*args):
+        if args[0:3] == ("airflow", "dags", "list-runs"):
+            return [older, newest, older]
+        if args[0:3] == ("airflow", "tasks", "states-for-dag-run"):
+            seen.append(args[4])
+            return list(reversed(TASKS))
+        raise AssertionError(args)
+
+    monkeypatch.setattr(exporter, "docker_json", stub)
+    result = exporter.export_snapshot(limit=2, with_data=False)
+    assert [r["run_id"] for r in result["runs"]] == ["manual__newest", "manual__older"]
+    assert seen == ["manual__newest", "manual__older"]
+    assert [t["task_id"] for t in result["runs"][0]["tasks"]] == [t["task_id"] for t in TASKS]
+
+
+def test_history_limit_applies_after_dedup(monkeypatch):
+    newer = {**RUN, "run_id": "manual__newer", "execution_date": "2026-11-16T00:00:00Z"}
+    older = {**RUN, "run_id": "manual__old", "execution_date": "2026-11-15T00:00:00Z"}
+    calls = []
+
+    def stub(*args):
+        if args[0:3] == ("airflow", "dags", "list-runs"):
+            return [newer, newer, older]
+        if args[0:3] == ("airflow", "tasks", "states-for-dag-run"):
+            calls.append(args[4])
+            return TASKS
+        raise AssertionError(args)
+
+    monkeypatch.setattr(exporter, "docker_json", stub)
+    result = exporter.export_snapshot(limit=1, with_data=False)
+    assert [r["run_id"] for r in result["runs"]] == ["manual__newer"]
+    assert calls == ["manual__newer"]
+
+
+def test_mixed_timezone_durations_remain_unknown():
+    assert exporter.duration_seconds("2026-11-15T09:00:00", "2026-11-15T10:00:00+00:00") is None
+    assert exporter.run_sort_key({"execution_date": "invalid"}) < exporter.run_sort_key(RUN)
+
+
+def test_operator_refresh_script_does_not_trigger_dag():
+    root = Path(__file__).resolve().parents[1]
+    script = (root / "scripts/refresh_v4_monitoring_windows.ps1").read_text(encoding="utf-8")
+    assert "scripts/export_v4_monitoring.py" in script
+    assert "python_env_windows.ps1" in script
+    assert "--limit" in script and "--skip-data" in script
+    assert "dags trigger" not in script
+    page = (root / "frontend/src/pages/Monitoring.tsx").read_text(encoding="utf-8")
+    assert "setInterval" in page and "60_000" in page
+    assert "matchesFilter" in page and "aria-pressed" in page

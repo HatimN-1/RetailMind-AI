@@ -52,3 +52,38 @@ cd frontend; npm.cmd run build
 No client data or credentials are exported. All V4 transaction data are synthetic.
 This does not change the V3 SQLite warehouse, ML models, existing API endpoints,
 existing Airflow DAG, or the `main` branch.
+
+
+## V4.5.2 — Historical runs, filters, operator refresh
+
+- Airflow runs are sorted by actual UTC `execution_date` (newest first),
+  duplicate run IDs are ignored, and up to 20 distinct runs are exported.
+  Task order follows the four-step DAG even when Airflow's CLI lists tasks differently.
+- React filters *Tous / Réussis / Échecs / En cours*, preserves the user's run
+  selection when possible, and re-reads the **existing JSON** every 60 seconds.
+  It never calls Docker or triggers/retries a DAG from the browser.
+- The data contract is the **warehouse's state at capture time**, not a
+  per-run dataset result. Selecting an older run does not change its metrics.
+- A stale capture is explicitly labeled. Auto-reloading the file does **not**
+  make Airflow data more recent; the operator must export again.
+
+From PowerShell at the repo root (no new DAG is created):
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\refresh_v4_monitoring_windows.ps1
+# Optional: maximum 20 historical runs, without rechecking DuckDB:
+powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\refresh_v4_monitoring_windows.ps1 -Limit 20 -SkipData
+```
+
+When demonstrating history with multiple runs, use the **Airflow UI** to trigger
+another execution *only if you explicitly want to regenerate the isolated V4
+synthetic dataset*. Once that run is complete, execute the refresh command.
+Do not delete volumes, modify the V3 warehouse, or claim automatic live updates.
+
+Validation:
+
+```powershell
+.\.venv\Scripts\python.exe -m pytest tests/test_v4_monitoring.py -v
+.\.venv\Scripts\python.exe -m ruff check src tests scripts/export_v4_monitoring.py --select E4,E7,E9,F
+npm.cmd --prefix .\frontend run build
+```
