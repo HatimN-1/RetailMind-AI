@@ -33,8 +33,10 @@ of DuckDB against the source. Any failed step prevents downstream execution.
 docker compose --profile airflow config --quiet
 docker compose --profile airflow build airflow
 
-# Validate Java/Python/dbt before starting the web UI.
-docker compose --profile airflow run --rm --no-deps airflow bash -lc 'java -version && /opt/retailmind-venv/bin/python -c "import pyspark, duckdb; print(pyspark.__version__, duckdb.__version__)" && /opt/retailmind-venv/bin/dbt --version'
+# Validate Java/Python/dbt (separate calls avoid PowerShell/Bash quote issues).
+docker compose --profile airflow run --rm --no-deps airflow java -version
+docker compose --profile airflow run --rm --no-deps airflow /opt/retailmind-venv/bin/python -m pip show pyspark duckdb
+docker compose --profile airflow run --rm --no-deps airflow /opt/retailmind-venv/bin/dbt --version
 
 # Start Airflow only; do not start the V3 bootstrap/API services.
 docker compose --profile airflow up -d airflow
@@ -79,3 +81,6 @@ docker compose --profile airflow stop airflow
 
 Do **not** run `docker compose down --volumes`: that would delete persistent
 local state, including data from other Compose services.
+
+For the V4.4.2 healthcheck and reproducible Docker smoke test, see
+[Docker readiness guide](V4_4_DOCKER.md).

@@ -52,3 +52,10 @@ dbt/packages/
 
 # dbt local user configuration
 dbt/.user.yml
+
+# V4 CI and Docker generated outputs
+data/reports/
+data/dbt_target_ci/
+data/dbt_logs_ci/
+data/dbt_target_airflow/
+data/dbt_logs_airflow/

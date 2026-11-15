@@ -8,6 +8,8 @@ on:
       - 'src/retailmind/**'
       - 'dbt/**'
       - 'scripts/verify_dbt.py'
+      - 'scripts/check_v4_docker.py'
+      - 'tests/test_docker_smoke_v4.py'
       - 'tests/test_spark_etl.py'
       - 'tests/test_dbt_pipeline.py'
       - 'tests/test_airflow_v4.py'
@@ -20,6 +22,8 @@ on:
       - 'src/retailmind/**'
       - 'dbt/**'
       - 'scripts/verify_dbt.py'
+      - 'scripts/check_v4_docker.py'
+      - 'tests/test_docker_smoke_v4.py'
       - 'tests/test_spark_etl.py'
       - 'tests/test_dbt_pipeline.py'
       - 'tests/test_airflow_v4.py'
@@ -86,7 +90,7 @@ jobs:
           print(json.dumps(report, indent=2))
           PYTHON
       - name: Test Spark, dbt and Airflow DAG wiring
-        run: python -m pytest tests/test_spark_etl.py tests/test_dbt_pipeline.py tests/test_airflow_v4.py -v
+        run: python -m pytest tests/test_spark_etl.py tests/test_dbt_pipeline.py tests/test_airflow_v4.py tests/test_docker_smoke_v4.py -v
       - name: Upload validation report
         if: always()
         uses: actions/upload-artifact@v4
